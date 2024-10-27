@@ -1,0 +1,15 @@
+Pro vyplneni usecky a vytvoreni n-uhelniku jsem pouzil Brahamuv algoritmus, zkousel jsem si i neco podobneho navrhnout sam ale nemelo to moc
+cenu. Chtel jsem udelat si vsechny bonusy ale nestihl jsem .
+Panel pro zobrazovani udaju -StatPanel trochu blbne(pri zmene rozliseni se obcas nezobrazi) a nejsem si jisty cim to je. Misto construktoru jsem si
+zkousel vsechno injectnout v hlavnim panelu. Snazil jsem se rozdelit tridy podle objektu a jejich funkcnosti kvuli narocnisti programu
+na pamet pri vytvareni mnoho jednoduchych objektu jako jednotlive body nebo cary, objekty jsou ve slozce object a
+jejich funkce ve slozce utility/handler az na tridy ktere nemaji moc funkci na to aby byla potreba je rozdelovat.
+
+
+
+Pro klavesove zkratky - (W,E)         - Zmena hustoty cary
+                      - (S,D)         - Zmena velikosti polygonu
+                      - (G,H)         - Zmena poctu stran polygonu
+                      - (F)           - Vykresleni polygonu na polohu mysi
+                      - Kolecko mysi  - Zmena rozmeru rozliseni
+                      - Shift + tah mysi - Vodorovne/horizontalni vykresleni usecky
