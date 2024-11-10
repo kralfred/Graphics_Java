@@ -33,7 +33,6 @@ public class PolygonUtility {
             int y = (int) (centerY + radius * Math.sin(angle));
             vertices.add(new Point(x, y));
         }
-
         return vertices;
     }
 

@@ -4,14 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e63a23c2-d6c3-4bac-8737-20f573d8298b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/c04_withers_alfred.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+    <list default="true" id="e63a23c2-d6c3-4bac-8737-20f573d8298b" name="Changes" comment="Drawing line works even with overlapping lines, there is an issue with the stat panel not being repainted properly.&#10; - Might add a devInfoPanel to show details of what is going on and display things like overlapping lines, vertecies and other useful information. &#10; - I thought injecting everything though set methods would be more readable instead of using contructor but it didnt, I think I will change that. &#10;- Now working on creating polygons by drawing lines that intersect, if two or more lines are connected but not closed off, then they will form a connected line object, if they are closed of they will form a polygon object. If a line passes twice through the same connected line object, it will form a polygon, if it passes through a polygon then it will form 2 new polygons from the old one.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/object/ConnectedLines.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/object/ConnectedLines.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utility/PolygonUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utility/PolygonUtility.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utility/RasterPanelUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utility/RasterPanelUtility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +25,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;kralfred&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/kralfred/Graphics_Java.git&quot;,
+    &quot;accountId&quot;: &quot;f4901abe-41b0-451d-9d7d-ac6be555bea8&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -45,6 +54,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/alfre/OneDrive/Desktop/Skola/Programovani_cvik/pgrf1.2024.c04-main&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -85,11 +95,37 @@
       <workItem from="1729428416963" duration="63112000" />
       <workItem from="1729498013304" duration="283000" />
       <workItem from="1729939982007" duration="43570000" />
-      <workItem from="1730035285614" duration="904000" />
+      <workItem from="1730035285614" duration="1733000" />
+      <workItem from="1730138026078" duration="1934000" />
+      <workItem from="1730995499036" duration="18291000" />
+      <workItem from="1731083254377" duration="5618000" />
+      <workItem from="1731158410844" duration="22355000" />
+      <workItem from="1731272558801" duration="159000" />
     </task>
+    <task id="LOCAL-00001" summary="Drawing line works even with overlapping lines, there is an issue with the stat panel not being repainted properly.&#10; - Might add a devInfoPanel to show details of what is going on and display things like overlapping lines, vertecies and other useful information. &#10; - I thought injecting everything though set methods would be more readable instead of using contructor but it didnt, I think I will change that. &#10;- Now working on creating polygons by drawing lines that intersect, if two or more lines are connected but not closed off, then they will form a connected line object, if they are closed of they will form a polygon object. If a line passes twice through the same connected line object, it will form a polygon, if it passes through a polygon then it will form 2 new polygons from the old one.">
+      <option name="closed" value="true" />
+      <created>1730036219652</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1730036219652</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Drawing line works even with overlapping lines, there is an issue with the stat panel not being repainted properly.&#10; - Might add a devInfoPanel to show details of what is going on and display things like overlapping lines, vertecies and other useful information. &#10; - I thought injecting everything though set methods would be more readable instead of using contructor but it didnt, I think I will change that. &#10;- Now working on creating polygons by drawing lines that intersect, if two or more lines are connected but not closed off, then they will form a connected line object, if they are closed of they will form a polygon object. If a line passes twice through the same connected line object, it will form a polygon, if it passes through a polygon then it will form 2 new polygons from the old one.">
+      <option name="closed" value="true" />
+      <created>1730036227224</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1730036227224</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Drawing line works even with overlapping lines, there is an issue with the stat panel not being repainted properly.&#10; - Might add a devInfoPanel to show details of what is going on and display things like overlapping lines, vertecies and other useful information. &#10; - I thought injecting everything though set methods would be more readable instead of using contructor but it didnt, I think I will change that. &#10;- Now working on creating polygons by drawing lines that intersect, if two or more lines are connected but not closed off, then they will form a connected line object, if they are closed of they will form a polygon object. If a line passes twice through the same connected line object, it will form a polygon, if it passes through a polygon then it will form 2 new polygons from the old one." />
+    <option name="LAST_COMMIT_MESSAGE" value="Drawing line works even with overlapping lines, there is an issue with the stat panel not being repainted properly.&#10; - Might add a devInfoPanel to show details of what is going on and display things like overlapping lines, vertecies and other useful information. &#10; - I thought injecting everything though set methods would be more readable instead of using contructor but it didnt, I think I will change that. &#10;- Now working on creating polygons by drawing lines that intersect, if two or more lines are connected but not closed off, then they will form a connected line object, if they are closed of they will form a polygon object. If a line passes twice through the same connected line object, it will form a polygon, if it passes through a polygon then it will form 2 new polygons from the old one." />
   </component>
 </project>

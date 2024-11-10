@@ -1,47 +1,42 @@
 package object;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ConnectedLines {
 
-    // Use HashMap for fast lookup
-    private HashMap<Line, Boolean> linesMap;
-    private HashMap<Line, ArrayList<Point>> connectionPointsMap;
+    ArrayList<Line> lines;
+    ArrayList<ConnectedPoint> connectedPoints;
+    private ArrayList<ConnectedLine> connectedInnerLines;
 
-    public ConnectedLines() {
-        linesMap = new HashMap<>();
-        connectionPointsMap = new HashMap<>();
-    }
+  public ConnectedLines(ArrayList<Line> lines, ArrayList<ConnectedPoint> connectedPoints) {
+      this.lines = lines;
+      this.connectedPoints = connectedPoints;
+  }
 
-    // Add a line to the map
-    public void addLine(Line line) {
-        linesMap.put(line, true); // or any relevant value
-    }
 
-    public void addConnectionPoint(Line line, Point connectionPoint) {
-        // Ensure the line exists in both maps
-        if (linesMap.containsKey(line)) {
-            connectionPointsMap.get(line).add(connectionPoint);
-        } else {
-            addLine(line); // Add the line if it's not present
-            connectionPointsMap.get(line).add(connectionPoint);
-        }
-    }
+  public void addLine(Line line, Point connectionPoint) {
+      this.lines.add(line);
+      this.connectedPoints.add(connectionPoint);
+  }
 
-    // Check if a line is in the map
     public boolean containsLine(Line line) {
-        return linesMap.containsKey(line);
+        return lines.contains(line);
     }
 
-    // Optional: Get all lines if needed
-    public HashMap<Line, Boolean> getLines() {
-        return linesMap;
+    public int getPoints(){
+      return connectedPoints.size();
+    }
+    public int getLines() {
+      return lines.size();
     }
 
-    // Optional: Method to get the number of crossed lines
-    public int getLineCount() {
-        return linesMap.size();
+    public void setInnerLine(){
+      this.connectedInnerLines = new ArrayList<>();
     }
+
+  public void createPolygon(Line line, Point firstPoint, Point secondPoint){
+
+  }
+
 }
 

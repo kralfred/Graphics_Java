@@ -2,8 +2,7 @@ package utility;
 
 import handler.KeyInputHandler;
 import handler.MouseHandler;
-import object.ConnectedLines;
-import object.Line;
+import object.*;
 import object.Point;
 import object.Polygon;
 import panel.RasterPanel;
@@ -41,6 +40,7 @@ public class RasterPanelUtility {
     private int sides;
     private LinkedList<Point> crossedPoints = new LinkedList<>();
     private ConnectedLines connectedLines = null;
+    private ArrayList<ConnectedLines> connectedLinesList = new ArrayList<>();
 
 
 
@@ -65,43 +65,51 @@ public class RasterPanelUtility {
 
 
 
-    public Polygon checkForConnectionSection(Line line){
+    public void checkForConnectionSection(Line line){
 
 
-
+        ArrayList<Line> touchingLine = new ArrayList<>();
         for(Point p1 : line.getPoints()){
             for(Line checkedLine : createdLines){
-                int numOfCrossedPoints = 0;
+
                 if(checkedLine.getPoints().contains(p1)){
-
-                    numOfCrossedPoints++;
-                    int polygonTouch = 0;
-                    int connectedLineTouch = 0;
-                    if(connectedLines.containsLine(checkedLine)){
-                     connectedLineTouch++;
-
-                    }else{
-                        polygonTouch++;
-
+                    boolean single = true;
+                    for(ConnectedLines connectedLine : connectedLinesList){
+                        if(connectedLine.containsLine(checkedLine)){
+                            ConnectedPoint connectedPoint = new ConnectedPoint(p1, )
+                            connectedLine.addLine(checkedLine, p1);
+                              checkForPolygons(connectedLine, p1);
+                              single = false;
+                        }
                     }
-                        crossedPoints.add(p1);
 
-                  crossedPoints.add(p1);
+                    if(single){
+                        Line l1 = checkedLine;
+                        Line l2 = line;
+                        ArrayList<Line> touchingLines = new ArrayList<>();
+                        ArrayList<Point> touchingPoint = new ArrayList<>();
+                        touchingPoint.add(p1);
+                        touchingLines.add(l1);
+                        touchingLines.add(l2);
+                        ConnectedLines connectedLinesInst = new ConnectedLines(touchingLines, touchingPoint);
+                        connectedLinesList.add(connectedLinesInst);
+                    }
 
 
 
 
-
+                    System.out.println("new connected linesaaaaa");
                 }
             }
         }
-        if(crossedPoints.size() > 2){
-
-        }
-
-        return null;
     }
 
+        public void checkForPolygons(ConnectedLines connectedLines, Point closingPoint){
+            if(connectedLines.getLines() == connectedLines.getPoints()){
+
+
+            }
+        }
 
         public int getPixelSize(){
         return pixelSize;
@@ -153,7 +161,9 @@ public class RasterPanelUtility {
 
         }else{
             Line line = lineUtility.createLine(startPoint, endPoint);
+            checkForConnectionSection(line);
             drawLine(line, Color.blue.getRGB());
+
             createdLines.add(line);
 
         }
