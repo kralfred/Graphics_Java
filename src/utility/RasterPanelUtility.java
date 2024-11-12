@@ -76,8 +76,12 @@ public class RasterPanelUtility {
                     boolean single = true;
                     for(ConnectedLines connectedLine : connectedLinesList){
                         if(connectedLine.containsLine(checkedLine)){
-                            ConnectedPoint connectedPoint = new ConnectedPoint(p1, )
-                            connectedLine.addLine(checkedLine, p1);
+                            ArrayList<Line> connectedLinesInst = new ArrayList<>();
+                            connectedLinesInst.add(line);
+                            connectedLinesInst.add(checkedLine);
+                            ConnectedPoint connectedPoint = new ConnectedPoint(connectedLinesInst, p1);
+
+                            connectedLine.addLine(connectedPoint, line);
                               checkForPolygons(connectedLine, p1);
                               single = false;
                         }
@@ -88,15 +92,15 @@ public class RasterPanelUtility {
                         Line l2 = line;
                         ArrayList<Line> touchingLines = new ArrayList<>();
                         ArrayList<Point> touchingPoint = new ArrayList<>();
+                        ArrayList<ConnectedPoint> touchingConnectedPoints = new ArrayList<>();
+                        ConnectedPoint connectedPoint = new ConnectedPoint(touchingLines, p1);
+                        touchingConnectedPoints.add(connectedPoint);
                         touchingPoint.add(p1);
                         touchingLines.add(l1);
                         touchingLines.add(l2);
-                        ConnectedLines connectedLinesInst = new ConnectedLines(touchingLines, touchingPoint);
+                        ConnectedLines connectedLinesInst = new ConnectedLines(touchingLines, touchingConnectedPoints);
                         connectedLinesList.add(connectedLinesInst);
                     }
-
-
-
 
                     System.out.println("new connected linesaaaaa");
                 }
