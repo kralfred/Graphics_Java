@@ -55,7 +55,7 @@ public class MouseHandler extends MouseAdapter implements MouseWheelListener {
     }
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("hih" + e.getX()/pixelSize + ":" + e.getY()/pixelSize);
+
         if(lineStartPoint == null){
             lineStartPoint = new Point(e.getX()/pixelSize, e.getY()/pixelSize);
 
@@ -88,14 +88,12 @@ public class MouseHandler extends MouseAdapter implements MouseWheelListener {
 
             prevPoint = currentPoint;
         }
-
-
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         Point endPoint = new Point(e.getX()/pixelSize, e.getY()/pixelSize);
-        rasterPanelUtility.createLine(startPoint, endPoint);
+        //rasterPanelUtility.createLine(startPoint, endPoint);
         rasterPanelUtility.clearTempPoints();
         startPoint = null;
 

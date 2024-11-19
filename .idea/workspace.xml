@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e63a23c2-d6c3-4bac-8737-20f573d8298b" name="Changes" comment="Working on checking for polygons after crossing a line with the checkforconnectionsection function, still dont know if I should create a seperate object for paths and crossroads.">
+    <list default="true" id="e63a23c2-d6c3-4bac-8737-20f573d8298b" name="Changes" comment="working on spliting lines with the split method. Should create new lines and vertecies from lines.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/object/ConnectedLines.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/object/ConnectedLines.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/handler/MouseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/handler/MouseHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/object/Line.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/object/Line.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/object/Vertex.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utility/LineUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utility/LineUtility.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utility/RasterPanelUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utility/RasterPanelUtility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -101,6 +104,10 @@
       <workItem from="1731158410844" duration="22355000" />
       <workItem from="1731272558801" duration="235000" />
       <workItem from="1731347858758" duration="21547000" />
+      <workItem from="1731424474267" duration="215000" />
+      <workItem from="1731611629338" duration="11491000" />
+      <workItem from="1731856649423" duration="595000" />
+      <workItem from="1731939957107" duration="20523000" />
     </task>
     <task id="LOCAL-00001" summary="Drawing line works even with overlapping lines, there is an issue with the stat panel not being repainted properly.&#10; - Might add a devInfoPanel to show details of what is going on and display things like overlapping lines, vertecies and other useful information. &#10; - I thought injecting everything though set methods would be more readable instead of using contructor but it didnt, I think I will change that. &#10;- Now working on creating polygons by drawing lines that intersect, if two or more lines are connected but not closed off, then they will form a connected line object, if they are closed of they will form a polygon object. If a line passes twice through the same connected line object, it will form a polygon, if it passes through a polygon then it will form 2 new polygons from the old one.">
       <option name="closed" value="true" />
@@ -126,7 +133,23 @@
       <option name="project" value="LOCAL" />
       <updated>1731272720566</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="working on spliting lines with the split method. Should create new lines and vertecies from lines.">
+      <option name="closed" value="true" />
+      <created>1731424537149</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1731424537149</updated>
+    </task>
+    <task id="LOCAL-00005" summary="working on spliting lines with the split method. Should create new lines and vertecies from lines.">
+      <option name="closed" value="true" />
+      <created>1731424549238</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1731424549238</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -135,6 +158,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Drawing line works even with overlapping lines, there is an issue with the stat panel not being repainted properly.&#10; - Might add a devInfoPanel to show details of what is going on and display things like overlapping lines, vertecies and other useful information. &#10; - I thought injecting everything though set methods would be more readable instead of using contructor but it didnt, I think I will change that. &#10;- Now working on creating polygons by drawing lines that intersect, if two or more lines are connected but not closed off, then they will form a connected line object, if they are closed of they will form a polygon object. If a line passes twice through the same connected line object, it will form a polygon, if it passes through a polygon then it will form 2 new polygons from the old one." />
     <MESSAGE value="Working on checking for polygons after crossing a line with the checkforconnectionsection function, still dont know if I should create a seperate object for paths and crossroads." />
-    <option name="LAST_COMMIT_MESSAGE" value="Working on checking for polygons after crossing a line with the checkforconnectionsection function, still dont know if I should create a seperate object for paths and crossroads." />
+    <MESSAGE value="working on spliting lines with the split method. Should create new lines and vertecies from lines." />
+    <option name="LAST_COMMIT_MESSAGE" value="working on spliting lines with the split method. Should create new lines and vertecies from lines." />
   </component>
 </project>

@@ -29,7 +29,7 @@ public class RasterPanelUtility {
     private LineUtility lineUtility;
     private Boolean shiftPressed = Boolean.FALSE;
     private ArrayList<Line> createdLines = new ArrayList<>();
-    ArrayList<Point> tempPoints = new ArrayList<>();
+    private ArrayList<Point> tempPoints = new ArrayList<>();
     private Line temporaryLine;
     private ArrayList<Point> tempEndPoints = new ArrayList<>();
     private PolygonUtility polygonUtility;
@@ -64,49 +64,68 @@ public class RasterPanelUtility {
 
 
 
-
-    public void checkForConnectionSection(Line line){
-
-
-        ArrayList<Line> touchingLine = new ArrayList<>();
-        for(Point p1 : line.getPoints()){
-            for(Line checkedLine : createdLines){
-
-                if(checkedLine.getPoints().contains(p1)){
-                    boolean single = true;
-                    for(ConnectedLines connectedLine : connectedLinesList){
-                        if(connectedLine.containsLine(checkedLine)){
-                            ArrayList<Line> connectedLinesInst = new ArrayList<>();
-                            connectedLinesInst.add(line);
-                            connectedLinesInst.add(checkedLine);
-                            ConnectedPoint connectedPoint = new ConnectedPoint(connectedLinesInst, p1);
-
-                            connectedLine.addLine(connectedPoint, line);
-                              checkForPolygons(connectedLine, p1);
-                              single = false;
-                        }
-                    }
-
-                    if(single){
-                        Line l1 = checkedLine;
-                        Line l2 = line;
-                        ArrayList<Line> touchingLines = new ArrayList<>();
-                        ArrayList<Point> touchingPoint = new ArrayList<>();
-                        ArrayList<ConnectedPoint> touchingConnectedPoints = new ArrayList<>();
-                        ConnectedPoint connectedPoint = new ConnectedPoint(touchingLines, p1);
-                        touchingConnectedPoints.add(connectedPoint);
-                        touchingPoint.add(p1);
-                        touchingLines.add(l1);
-                        touchingLines.add(l2);
-                        ConnectedLines connectedLinesInst = new ConnectedLines(touchingLines, touchingConnectedPoints);
-                        connectedLinesList.add(connectedLinesInst);
-                    }
-
-                    System.out.println("new connected linesaaaaa");
-                }
-            }
-        }
+    public boolean onSegment(Point p, Point q, Point r) {
+        return q.getX() <= Math.max(p.getX(), r.getX()) && q.getX() >= Math.min(p.getX(), r.getX()) &&
+                q.getY() <= Math.max(p.getY(), r.getY()) && q.getY() >= Math.min(p.getY(), r.getY());
     }
+
+    public int orientation(Point p, Point q, Point r) {
+        int val = (q.getY() - p.getY()) * (r.getX() - q.getX()) -
+                (q.getX() - p.getX()) * (r.getY() - q.getY());
+        if (val == 0) return 0;
+        return (val > 0) ? 1 : 2;
+    }
+
+    public boolean crossLinesCheck(Line l1, Line l2) {
+        Point l1Start = l1.getPoints().get(0);
+        Point l1End = l1.getPoints().get(l1.getPoints().size() - 1);
+        Point l2Start = l2.getPoints().get(0);
+        Point l2End = l2.getPoints().get(l2.getPoints().size() - 1);
+
+        int o1 = orientation(l1Start, l1End, l2Start);
+        int o2 = orientation(l1Start, l1End, l2End);
+        int o3 = orientation(l2Start, l2End, l1Start);
+        int o4 = orientation(l2Start, l2End, l1End);
+
+
+        if (o1 != o2 && o3 != o4) {
+            return true;
+        }
+
+        if (o1 == 0 && onSegment(l1Start, l2Start, l1End)) {
+            System.out.println("Special case: l2Start is on segment l1");
+            return true;
+        }
+        if (o2 == 0 && onSegment(l1Start, l2End, l1End)) {
+            System.out.println("Special case: l2End is on segment l1");
+            return true;
+        }
+        if (o3 == 0 && onSegment(l2Start, l1Start, l2End)) {
+            System.out.println("Special case: l1Start is on segment l2");
+            return true;
+        }
+        if (o4 == 0 && onSegment(l2Start, l1End, l2End)) {
+            System.out.println("Special case: l1End is on segment l2");
+            return true;
+        }
+
+        // Otherwise, no intersection
+        return false;
+    }
+
+       public void checkForConnectionSection(Line drawnLine){
+
+
+           for (Line checkedLine : createdLines) {
+
+               if (crossLinesCheck(drawnLine, checkedLine) && drawnLine != checkedLine) {
+                   System.out.println("Intersection detected!");
+               }
+           }
+
+       }
+
+
 
         public void checkForPolygons(ConnectedLines connectedLines, Point closingPoint){
             if(connectedLines.getLines() == connectedLines.getPoints()){
@@ -165,9 +184,9 @@ public class RasterPanelUtility {
 
         }else{
             Line line = lineUtility.createLine(startPoint, endPoint);
-            checkForConnectionSection(line);
+            System.out.println("created lines = " +  createdLines.size());
             drawLine(line, Color.blue.getRGB());
-
+            checkForConnectionSection(line);
             createdLines.add(line);
 
         }
@@ -208,7 +227,7 @@ public class RasterPanelUtility {
 
             }else{
                 if(tempCrossedPoints.contains(p1)){
-                    setPixel(p1, Color.green.getRGB());
+                    setPixel(p1, Color.blue.getRGB());
 
                 }
                 else{
@@ -248,7 +267,7 @@ public class RasterPanelUtility {
     public void drawLine(Line newLine, int color) {
 
         for (Point point : newLine.getPoints()) {
-            setPixel(point, Color.green.getRGB());
+            setPixel(point, color);
         }
         setPixel(newLine.getPoints().get(0), Color.red.getRGB());
         setPixel(newLine.getPoints().get(newLine.getPoints().size() - 1), Color.red.getRGB());

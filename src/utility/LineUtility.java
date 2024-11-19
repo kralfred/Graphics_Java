@@ -2,10 +2,7 @@ package utility;
 
 import object.Line;
 import object.Point;
-import object.Vertex;
-import panel.RasterPanel;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class LineUtility {
@@ -61,10 +58,9 @@ public class LineUtility {
             addThickPixels(pointsArrayList, x1, y1, thickness);
         }
 
-        Vertex start = new Vertex(p1);
-        Vertex end = new Vertex(p2);
 
-        return new Line(pointsArrayList, start, end);
+
+        return new Line(pointsArrayList);
     }
 
 
