@@ -9,7 +9,6 @@ public class ConnectedLines {
 
     ArrayList<Line> lines;
     ArrayList<ConnectedPoint> connectedPoints;
-    private ArrayList<ConnectedLine> connectedInnerLines;
     private LineUtility lineUtility;
 
   public ConnectedLines(ArrayList<Line> lines, ArrayList<ConnectedPoint> connectedPoints) {
@@ -19,20 +18,22 @@ public class ConnectedLines {
   }
 
 
-  public void addLine(ConnectedPoint connectedPoint, Line line) {
+  public void addLine(Line line) {
       lines.add(line);
-      this.connectedPoints.add(connectedPoint);
+  }
+  public void addConnectedPoint(ConnectedPoint connectedPoint) {
+      connectedPoints.add(connectedPoint);
   }
 
     public boolean containsLine(Line line) {
         return lines.contains(line);
     }
 
-    public int getPoints(){
-      return connectedPoints.size();
+    public ArrayList<ConnectedPoint> getPoints(){
+      return connectedPoints;
     }
-    public int getLines() {
-      return lines.size();
+    public ArrayList<Line> getLines() {
+      return lines;
     }
 
     public void split(Line line, Point point){

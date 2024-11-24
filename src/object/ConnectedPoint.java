@@ -20,6 +20,10 @@ public class ConnectedPoint {
     public void setConnectedLines(){
 
     }
+    public boolean containsLine(Line line){
+        return connectedLines.contains(line);
+    }
+
     public void addConnectedLine(Line line){
         connectedLines.add(line);
     }

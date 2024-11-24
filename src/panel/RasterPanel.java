@@ -17,8 +17,12 @@ public class RasterPanel extends JPanel {
     private MouseHandler mouseHandler;
     private KeyInputHandler keyInputHandler;
     private StatPanel statPanel;
+    private DevInfoPanel devInfoPanel;
 
 
+   public RasterPanel(DevInfoPanel devInfoPanel) {
+       this.devInfoPanel = devInfoPanel;
+   }
 
     public void setKeyInputHandler(KeyInputHandler keyInputHandler) {
         this.keyInputHandler = keyInputHandler;

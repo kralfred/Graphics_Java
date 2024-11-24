@@ -23,36 +23,39 @@ public class KeyInputHandler extends KeyAdapter {
         }
 
         else if (e.getKeyCode() == KeyEvent.VK_F) {
-            rasterPanelUtility.setKey();
+            rasterPanelUtility.keyboardListener('F');
             System.out.println("F key pressed");
-
-
         }else if (e.getKeyCode() == KeyEvent.VK_W) {
-            rasterPanelUtility.setLineThickness('W');
+            rasterPanelUtility.keyboardListener('W');
             System.out.println("W key pressed");
         }else if (e.getKeyCode() == KeyEvent.VK_E) {
-            rasterPanelUtility.setLineThickness('E');
+            rasterPanelUtility.keyboardListener('E');
             System.out.println("E key pressed");
 
 
         }else if (e.getKeyCode() == KeyEvent.VK_G) {
-            rasterPanelUtility.setLineThickness('G');
+            rasterPanelUtility.keyboardListener('G');
             System.out.println("G key pressed");
         }else if (e.getKeyCode() == KeyEvent.VK_H) {
-            rasterPanelUtility.setLineThickness('H');
+            rasterPanelUtility.keyboardListener('H');
             System.out.println("H key pressed");
 
 
         }else if (e.getKeyCode() == KeyEvent.VK_S) {
-            rasterPanelUtility.setLineThickness('S');
+            rasterPanelUtility.keyboardListener('S');
             System.out.println("S key pressed");
         }else if (e.getKeyCode() == KeyEvent.VK_D) {
-            rasterPanelUtility.setLineThickness('D');
+            rasterPanelUtility.keyboardListener('D');
             System.out.println("D key pressed");
 
         }else if (e.getKeyCode() == KeyEvent.VK_L) {
-            rasterPanelUtility.setLineThickness('L');
+            rasterPanelUtility.keyboardListener('L');
             System.out.println("L key pressed");
+        }
+
+        else if (e.getKeyCode() == KeyEvent.VK_K) {
+            rasterPanelUtility.keyboardListener('K');
+            System.out.println("K key pressed");
         }
 
     }
@@ -60,9 +63,6 @@ public class KeyInputHandler extends KeyAdapter {
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
             rasterPanelUtility.keyReleased(e.getKeyCode());
-        }else if (e.getKeyCode() == KeyEvent.VK_F) {
-            rasterPanelUtility.fKeyReleased();
-            System.out.println("F key pressed");
         }
     }
 

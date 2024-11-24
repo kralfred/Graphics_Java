@@ -14,7 +14,7 @@ public class StatPanel extends JPanel {
     JLabel polygonRadiusLabel = new JLabel("Polygon radius:  2");
     JLabel polygonSideCountLabel = new JLabel("Polygon sides:  5");
     public StatPanel() {
-        setLayout(null);
+
 
         add(pixelSizeLabel);
         add(mousePositionLabel);
@@ -62,4 +62,5 @@ public class StatPanel extends JPanel {
     public void updatePolygonSideCount(int x){
         polygonSideCountLabel.setText("Polygon sides: " + x);
     }
+
 }

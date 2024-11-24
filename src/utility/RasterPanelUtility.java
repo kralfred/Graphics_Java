@@ -5,6 +5,7 @@ import handler.MouseHandler;
 import object.*;
 import object.Point;
 import object.Polygon;
+import panel.DevInfoPanel;
 import panel.RasterPanel;
 import panel.StatPanel;
 
@@ -41,11 +42,15 @@ public class RasterPanelUtility {
     private LinkedList<Point> crossedPoints = new LinkedList<>();
     private ConnectedLines connectedLines = null;
     private ArrayList<ConnectedLines> connectedLinesList = new ArrayList<>();
+    private ArrayList<ConnectedPoint> connectedPointsList = new ArrayList<>();
+    private LinkedList<Polygon> polygonsList = new LinkedList<>();
+    private DevInfoPanel devInfoPanel;
+    private Point mousePosition;
 
 
+    public RasterPanelUtility(DevInfoPanel devInfoPanel) {
 
-    public RasterPanelUtility() {
-
+        this.devInfoPanel = devInfoPanel;
         this.width = 800;
         this.height = 600;
         this.gridSize = new int[width][height];
@@ -62,6 +67,32 @@ public class RasterPanelUtility {
             }
         }
 
+
+    public Point findIntersection(Point p1, Point p2, Point p3, Point p4) {
+        double A1 = p2.getY() - p1.getY();
+        double B1 = p1.getX() - p2.getX();
+        double C1 = A1 * p1.getX() + B1 * p1.getY();
+
+
+        double A2 = p4.getY() - p3.getY();
+        double B2 = p3.getX() - p4.getX();
+        double C2 = A2 * p3.getX() + B2 * p3.getY();
+
+
+        double determinant = A1 * B2 - A2 * B1;
+
+        if (determinant == 0) {
+            // Lines are parallel
+            return null;
+        } else {
+            double x = (B2 * C1 - B1 * C2) / determinant;
+            double y = (A1 * C2 - A2 * C1) / determinant;
+
+
+            return new Point((int) Math.round(x), (int) Math.round(y));
+
+        }
+    }
 
 
     public boolean onSegment(Point p, Point q, Point r) {
@@ -109,30 +140,193 @@ public class RasterPanelUtility {
             return true;
         }
 
-        // Otherwise, no intersection
+
         return false;
     }
 
+
+
+    public void connectConnectedLines(ConnectedLines lines1, ConnectedLines lines2) {
+        for(Line line: lines1.getLines()){
+            lines2.addLine(line);
+        }
+        for(ConnectedPoint connectedPoint : lines1.getPoints()){
+            lines2.addConnectedPoint(connectedPoint);
+        }
+
+    }
+
+      public void createPolygonFromConnectedLines(ConnectedLines lines1, ConnectedLines lines2) {
+
+      }
+
+      public void split(Line line, ConnectedLines connectedLines, Point splitPoint){
+        ArrayList<ConnectedPoint> connectedPoints = new ArrayList();
+
+        for(ConnectedPoint connectedPoint : connectedLines.getPoints()){
+            if(connectedPoint.containsLine(line)){
+                connectedPoints.add(connectedPoint);
+            }
+        }
+
+          if(connectedPoints.size() > 1 ){
+              if(line.getPoints().contains(splitPoint)){
+              ConnectedPoint firstConnectedPoint = connectedPoints.get(0);
+              ConnectedPoint secondConnectedPoint = connectedPoints.get(1);
+
+              firstConnectedPoint.removeConnectedLine(line);
+              secondConnectedPoint.removeConnectedLine(line);
+
+              ArrayList<Point> firstSection = new ArrayList();
+              ArrayList<Point> secondSection = new ArrayList();
+              
+              boolean first = true;
+
+                  for(Point point : line.getPoints()){
+                      if(first){
+                          firstSection.add(point); 
+                      }else{
+                          secondSection.add(point);
+                      }
+                      if(point == splitPoint){
+                          first = false;
+                          
+                      }
+                  }
+                  
+                  Line secondLine = new Line(secondSection);
+                  Line firstLine = new Line(firstSection);
+                  ArrayList<Line> lineList = new ArrayList();
+                  if(line.getPoints().get(0) == firstConnectedPoint.getCurrentPoint()){
+                      firstConnectedPoint.addConnectedLine(firstLine);
+                      secondConnectedPoint.addConnectedLine(secondLine);
+                  } else if (line.getPoints().get(0) == secondConnectedPoint.getCurrentPoint()) {
+                      secondConnectedPoint.addConnectedLine(secondLine);
+                      firstConnectedPoint.addConnectedLine(firstLine);
+                  }
+                  ConnectedPoint splitConnectionPoint = new ConnectedPoint(lineList, splitPoint);
+                  connectedPoints.add(splitConnectionPoint);
+                  }
+             
+              
+              
+          } else if (connectedPoints.size() == 1) {
+              
+          }
+
+      }
+
        public void checkForConnectionSection(Line drawnLine){
 
+        ConnectedLines prev = null;
 
            for (Line checkedLine : createdLines) {
 
-               if (crossLinesCheck(drawnLine, checkedLine) && drawnLine != checkedLine) {
+               if (crossLinesCheck(drawnLine, checkedLine)) {
+
+
+                   Point inter = findIntersection(drawnLine.getPoints().get(0),drawnLine.getPoints().get(drawnLine.getPoints().size() - 1),
+                           checkedLine.getPoints().get(0), checkedLine.getPoints().get(checkedLine.getPoints().size() - 1));
+
+
+                   setPixel(inter, Color.YELLOW.getRGB());
+
+
+                   boolean addNewConnectedLine = true;
+
+                   if(connectedLinesList.isEmpty()) {
+                       if(prev == null){
+                           ArrayList<Line> connectedLines = new ArrayList<>();
+                           connectedLines.add(drawnLine);
+                           connectedLines.add(checkedLine);
+                           ArrayList<ConnectedPoint> currentConnectedPoints = new ArrayList<>();
+                           ConnectedPoint connectionPoint = new ConnectedPoint(connectedLines, findIntersection(drawnLine.getPoints().get(0),drawnLine.getPoints().get(drawnLine.getPoints().size() - 1),
+                                   checkedLine.getPoints().get(0), checkedLine.getPoints().get(checkedLine.getPoints().size() - 1)));
+                           currentConnectedPoints.add(connectionPoint);
+
+                           prev = new ConnectedLines(connectedLines, currentConnectedPoints);
+
+                       }else{
+                           prev.addLine(checkedLine);
+                       }
+
+                   }else{
+                       ConnectedLines merge = null;
+                       for(ConnectedLines connectedLine : connectedLinesList){
+                           if(connectedLine.containsLine(checkedLine) && connectedLine.containsLine(drawnLine)){
+                               addNewConnectedLine = false;
+                               System.out.println("new polygon");
+
+                           }else if(connectedLine.containsLine(checkedLine) && !connectedLine.containsLine(drawnLine)){
+                               addNewConnectedLine = false;
+
+                               if(prev == null){
+
+
+                                   connectedLine.addLine(drawnLine);
+                                   prev = connectedLine;
+
+                               }else {
+
+                                   merge = connectedLine;
+
+                                   System.out.println("checked line");
+
+                               }
+
+
+
+                           }
+
+                       }
+                       if(merge!=null){
+                           connectedLinesList.remove(prev);
+                           connectConnectedLines(merge, prev);
+                           connectedLinesList.remove(merge);
+                           connectedLinesList.add(prev);
+                       }
+
+                       if(addNewConnectedLine){
+                           ArrayList<Line> connectedLines = new ArrayList<>();
+                           connectedLines.add(drawnLine);
+                           connectedLines.add(checkedLine);
+                           ArrayList<ConnectedPoint> currentConnectedPoints = new ArrayList<>();
+                           ConnectedPoint connectionPoint = new ConnectedPoint(connectedLines, findIntersection(drawnLine.getPoints().get(0),drawnLine.getPoints().get(drawnLine.getPoints().size() - 1),
+                                   checkedLine.getPoints().get(0), checkedLine.getPoints().get(checkedLine.getPoints().size() - 1)));
+                           currentConnectedPoints.add(connectionPoint);
+
+                           prev = new ConnectedLines(connectedLines, currentConnectedPoints);
+                           connectedLinesList.add(prev);
+                           System.out.println("new connected line different");
+                       }
+
+
+                   }
+
+
+
                    System.out.println("Intersection detected!");
+
+
+
                }
            }
+
+           if(prev != null && connectedLinesList.isEmpty()){
+
+               connectedLinesList = new ArrayList<>();
+               connectedLinesList.add(prev);
+               System.out.println("new connected line added  " + connectedLinesList.size());
+           }
+
+
+
+           updateDevInfoPanel();
+
 
        }
 
 
-
-        public void checkForPolygons(ConnectedLines connectedLines, Point closingPoint){
-            if(connectedLines.getLines() == connectedLines.getPoints()){
-
-
-            }
-        }
 
         public int getPixelSize(){
         return pixelSize;
@@ -144,19 +338,11 @@ public class RasterPanelUtility {
             statPanel.updatePixelSize(pixelSize);
             statPanel.repaint();
 
-
         }
         public void updateMousePosition(int x, int y) {
           statPanel.updateMousePosition(x, y);
+          mousePosition = new Point(x, y);
 
-          if(fPressed){
-              radius = polygonUtility.getRadius();
-              sides = polygonUtility.getSides();
-              polygon = new Polygon(polygonUtility.calculatePolygonVertices(x,y,radius,sides));
-              System.out.println("funguje");
-              drawPolygon(polygon, sides);
-
-          }
         }
 
     public void setPixel(Point point, int color) {
@@ -184,7 +370,6 @@ public class RasterPanelUtility {
 
         }else{
             Line line = lineUtility.createLine(startPoint, endPoint);
-            System.out.println("created lines = " +  createdLines.size());
             drawLine(line, Color.blue.getRGB());
             checkForConnectionSection(line);
             createdLines.add(line);
@@ -238,9 +423,6 @@ public class RasterPanelUtility {
 
             }
         }
-        System.out.println("tempPoint  " + tempPoints.size());
-        System.out.println("tempPoint crossed " + tempCrossedPoints.size());
-
 
     }
 
@@ -257,7 +439,6 @@ public class RasterPanelUtility {
         createLine(polygon.getPoints().get(vertices - 1), polygon.getPoints().get(0));
 
         for(int i = 0; i < vertices - 1; i++){
-            System.out.println("good" + i);
             createLine(polygon.getPoints().get(i), polygon.getPoints().get(i + 1));
         }
     }
@@ -272,11 +453,7 @@ public class RasterPanelUtility {
         setPixel(newLine.getPoints().get(0), Color.red.getRGB());
         setPixel(newLine.getPoints().get(newLine.getPoints().size() - 1), Color.red.getRGB());
 
-        statPanel.repaint();
-
     }
-
-
 
     // KeyBoard action
 
@@ -301,7 +478,7 @@ public class RasterPanelUtility {
     }
 
 
-    public void setLineThickness(char a){
+    public void keyboardListener(char a){
         if(a == 'W'){
             lineUtility.setThickness(lineUtility.getThickness()+1);
             statPanel.updateLineThickness(lineUtility.getThickness());
@@ -320,19 +497,35 @@ public class RasterPanelUtility {
         }else if (a == 'H') {
             polygonUtility.setSides(polygonUtility.getSides()-1);
             statPanel.updatePolygonSideCount(polygonUtility.getSides());
+        }else if (a == 'K') {
+            if(devInfoPanel.isVisible()){
+                devInfoPanel.setVisible(false);
+            }else{
+                devInfoPanel.setVisible(true);
+                updateDevInfoPanel();
+            }
+        }else if(a =='F'){
+            radius = polygonUtility.getRadius();
+            sides = polygonUtility.getSides();
+            polygon = new Polygon(polygonUtility.calculatePolygonVertices(mousePosition.getX(),mousePosition.getY(),radius,sides));
+            drawPolygon(polygon, sides);
+        }
+    }
+
+    public void updateDevInfoPanel(){
+
+        if(devInfoPanel.isVisible()){
+            devInfoPanel.updateDevInfoPanel(connectedPointsList.size(),connectedLinesList.size(), connectedLinesList.size(), polygonsList.size());
+            devInfoPanel.repaint();
         }
 
-        else if (a == 'L') {
-            polygonUtility.setSides(polygonUtility.getSides()-1);
-            statPanel.updatePolygonSideCount(polygonUtility.getSides());
-        }
     }
 
     public void clear(){
         tempPoints.clear();
         tempEndPoints.clear();
         createdLines.clear();
-
+        mousePosition = null;
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 gridSize[x][y] = Color.black.getRGB();
@@ -345,13 +538,8 @@ public class RasterPanelUtility {
 
 
 
-    public void fKeyReleased(){
-        this.fPressed = false;
-    }
-    public void fKeyPressed(){
-        this.fPressed = true;
 
-    }
+
 
     public boolean isShiftPressed() {
         return shiftPressed;
@@ -374,9 +562,6 @@ public class RasterPanelUtility {
     }
     public void setLineUtility(LineUtility lineUtility) {
         this.lineUtility = lineUtility;
-    }
-    public void setKey(){
-        fPressed = true;
     }
 
     }

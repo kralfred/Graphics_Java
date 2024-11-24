@@ -6,5 +6,7 @@ public class Main {
 
         MainPanel mainPanel = new MainPanel(800, 600);
 
+
+
     }
 }

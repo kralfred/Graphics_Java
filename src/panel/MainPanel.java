@@ -20,6 +20,7 @@ public class MainPanel extends JPanel {
     private LineUtility lineUtility;
     private KeyInputHandler keyInputHandler;
     private PolygonUtility polygonUtility;
+    private DevInfoPanel devInfoPanel = new DevInfoPanel();
 
     public MainPanel(int width, int height){
 
@@ -30,8 +31,8 @@ public class MainPanel extends JPanel {
 
         this.keyInputHandler = new KeyInputHandler();
         this.lineUtility = new LineUtility();
-        this.rasterPanelUtility = new RasterPanelUtility();
-        this.rasterPanel = new RasterPanel();
+        this.rasterPanelUtility = new RasterPanelUtility(devInfoPanel);
+        this.rasterPanel = new RasterPanel(devInfoPanel);
         this.statPanel = new StatPanel();
         this.mouseHandler = new MouseHandler();
         this.polygonUtility = new PolygonUtility();
@@ -71,11 +72,13 @@ public class MainPanel extends JPanel {
         mainFrame.setVisible(true);
         mainFrame.setSize(width,height);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
+        mainFrame.setLayout(new BorderLayout());
 
         mainFrame.addKeyListener(keyInputHandler);
+
         mainFrame.add(statPanel);
-        mainFrame.add(rasterPanel);
+        mainFrame.add(devInfoPanel, BorderLayout.EAST);
+        mainFrame.add(rasterPanel, BorderLayout.CENTER);
 
 
 
