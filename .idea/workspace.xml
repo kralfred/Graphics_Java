@@ -4,21 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e63a23c2-d6c3-4bac-8737-20f573d8298b" name="Changes" comment="Added crossline check function to check if lines are crossed. Next up, fix line creation only once when mouse is clicked + released, return the point of cross-section and create a new polygon from crossed lines.">
+    <list default="true" id="e63a23c2-d6c3-4bac-8737-20f573d8298b" name="Changes" comment="Connecting connected lines finally works. Next up I have to finish the split function to determine the inner lines and then create a polygon, this function should work differently if the line I want to split contains the split point or not, If it does then just transfer the point to two seperate arrays, if not then create new lines. I should probably change all my array lists to linked lists.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/handler/KeyInputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/handler/KeyInputHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/handler/MouseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/handler/MouseHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/object/ConnectedLine.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/object/ConnectedLines.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/object/ConnectedLines.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/object/ConnectedPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/object/ConnectedPoint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/object/DataClass.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/panel/DevInfoPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/panel/DevInfoPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/panel/MainPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/panel/MainPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/panel/RasterPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/panel/RasterPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/panel/StatPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/panel/StatPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utility/DevInfoPanelUtility.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utility/LineUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utility/LineUtility.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utility/RasterPanelUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utility/RasterPanelUtility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -124,7 +113,11 @@
       <workItem from="1732284253345" duration="23220000" />
       <workItem from="1732326130003" duration="769000" />
       <workItem from="1732371562123" duration="12284000" />
-      <workItem from="1732388794517" duration="20484000" />
+      <workItem from="1732388794517" duration="21839000" />
+      <workItem from="1732453841475" duration="51505000" />
+      <workItem from="1732513990728" duration="3185000" />
+      <workItem from="1732520475923" duration="454000" />
+      <workItem from="1732549300661" duration="1927000" />
     </task>
     <task id="LOCAL-00001" summary="Drawing line works even with overlapping lines, there is an issue with the stat panel not being repainted properly.&#10; - Might add a devInfoPanel to show details of what is going on and display things like overlapping lines, vertecies and other useful information. &#10; - I thought injecting everything though set methods would be more readable instead of using contructor but it didnt, I think I will change that. &#10;- Now working on creating polygons by drawing lines that intersect, if two or more lines are connected but not closed off, then they will form a connected line object, if they are closed of they will form a polygon object. If a line passes twice through the same connected line object, it will form a polygon, if it passes through a polygon then it will form 2 new polygons from the old one.">
       <option name="closed" value="true" />
@@ -174,7 +167,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732014352111</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Connecting connected lines finally works. Next up I have to finish the split function to determine the inner lines and then create a polygon, this function should work differently if the line I want to split contains the split point or not, If it does then just transfer the point to two seperate arrays, if not then create new lines. I should probably change all my array lists to linked lists.">
+      <option name="closed" value="true" />
+      <created>1732415002039</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1732415002039</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -185,6 +186,7 @@
     <MESSAGE value="Working on checking for polygons after crossing a line with the checkforconnectionsection function, still dont know if I should create a seperate object for paths and crossroads." />
     <MESSAGE value="working on spliting lines with the split method. Should create new lines and vertecies from lines." />
     <MESSAGE value="Added crossline check function to check if lines are crossed. Next up, fix line creation only once when mouse is clicked + released, return the point of cross-section and create a new polygon from crossed lines." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added crossline check function to check if lines are crossed. Next up, fix line creation only once when mouse is clicked + released, return the point of cross-section and create a new polygon from crossed lines." />
+    <MESSAGE value="Connecting connected lines finally works. Next up I have to finish the split function to determine the inner lines and then create a polygon, this function should work differently if the line I want to split contains the split point or not, If it does then just transfer the point to two seperate arrays, if not then create new lines. I should probably change all my array lists to linked lists." />
+    <option name="LAST_COMMIT_MESSAGE" value="Connecting connected lines finally works. Next up I have to finish the split function to determine the inner lines and then create a polygon, this function should work differently if the line I want to split contains the split point or not, If it does then just transfer the point to two seperate arrays, if not then create new lines. I should probably change all my array lists to linked lists." />
   </component>
 </project>

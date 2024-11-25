@@ -57,6 +57,16 @@ public class KeyInputHandler extends KeyAdapter {
             rasterPanelUtility.keyboardListener('K');
             System.out.println("K key pressed");
         }
+        else if (e.getKeyCode() == KeyEvent.VK_P) {
+            rasterPanelUtility.keyboardListener('P');
+            System.out.println("K key pressed");
+        }else if (e.getKeyCode() == KeyEvent.VK_1) {
+            rasterPanelUtility.keyboardListener('1');
+            System.out.println("1 key pressed");
+        }else if (e.getKeyCode() == KeyEvent.VK_A) {
+            rasterPanelUtility.keyboardListener('A');
+            System.out.println("A key pressed");
+        }
 
     }
     @Override

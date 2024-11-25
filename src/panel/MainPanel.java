@@ -2,6 +2,7 @@ package panel;
 
 import handler.KeyInputHandler;
 import handler.MouseHandler;
+import handler.PointOrientationHandler;
 import utility.LineUtility;
 import utility.PolygonUtility;
 import utility.RasterPanelUtility;
@@ -21,6 +22,7 @@ public class MainPanel extends JPanel {
     private KeyInputHandler keyInputHandler;
     private PolygonUtility polygonUtility;
     private DevInfoPanel devInfoPanel = new DevInfoPanel();
+    private PointOrientationHandler pointOrientationHandler;
 
     public MainPanel(int width, int height){
 
@@ -36,7 +38,7 @@ public class MainPanel extends JPanel {
         this.statPanel = new StatPanel();
         this.mouseHandler = new MouseHandler();
         this.polygonUtility = new PolygonUtility();
-
+        this.pointOrientationHandler = new PointOrientationHandler();
         polygonUtility.setRasterPanelUtility(rasterPanelUtility);
         polygonUtility.setRasterPanel(rasterPanel);
 
@@ -62,6 +64,7 @@ public class MainPanel extends JPanel {
         rasterPanelUtility.setMouseHandler(mouseHandler);
         rasterPanelUtility.setStatPanel(statPanel);
         rasterPanelUtility.setRasterPanel(rasterPanel);
+        rasterPanelUtility.setPointOrientationHandler(pointOrientationHandler);
 
         rasterPanelUtility.setLineUtility(lineUtility);
         rasterPanelUtility.setPolygonUtility(polygonUtility);

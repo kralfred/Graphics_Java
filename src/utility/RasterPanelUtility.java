@@ -2,6 +2,7 @@ package utility;
 
 import handler.KeyInputHandler;
 import handler.MouseHandler;
+import handler.PointOrientationHandler;
 import object.*;
 import object.Point;
 import object.Polygon;
@@ -11,9 +12,7 @@ import panel.StatPanel;
 
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 
 public class RasterPanelUtility {
@@ -46,6 +45,7 @@ public class RasterPanelUtility {
     private LinkedList<Polygon> polygonsList = new LinkedList<>();
     private DevInfoPanel devInfoPanel;
     private Point mousePosition;
+    private PointOrientationHandler pointOrientationHandler;
 
 
     public RasterPanelUtility(DevInfoPanel devInfoPanel) {
@@ -82,7 +82,6 @@ public class RasterPanelUtility {
         double determinant = A1 * B2 - A2 * B1;
 
         if (determinant == 0) {
-            // Lines are parallel
             return null;
         } else {
             double x = (B2 * C1 - B1 * C2) / determinant;
@@ -156,65 +155,121 @@ public class RasterPanelUtility {
 
     }
 
-      public void createPolygonFromConnectedLines(ConnectedLines lines1, ConnectedLines lines2) {
 
-      }
-
-      public void split(Line line, ConnectedLines connectedLines, Point splitPoint){
-        ArrayList<ConnectedPoint> connectedPoints = new ArrayList();
-
+    public boolean checkForPoint(ConnectedLines connectedLines, Point p){
         for(ConnectedPoint connectedPoint : connectedLines.getPoints()){
-            if(connectedPoint.containsLine(line)){
-                connectedPoints.add(connectedPoint);
+            if(connectedPoint.getCurrentPoint().equals(p)){
+                return true;
             }
         }
+        return false;
+    }
 
-          if(connectedPoints.size() > 1 ){
-              if(line.getPoints().contains(splitPoint)){
-              ConnectedPoint firstConnectedPoint = connectedPoints.get(0);
-              ConnectedPoint secondConnectedPoint = connectedPoints.get(1);
 
-              firstConnectedPoint.removeConnectedLine(line);
-              secondConnectedPoint.removeConnectedLine(line);
+    public void removeLineWithPoint(ConnectedPoint connectedPoint, Point p){
+        connectedPoint.getConnectedLines().removeIf(line -> line.getPoints().contains(p));
+    }
 
-              ArrayList<Point> firstSection = new ArrayList();
-              ArrayList<Point> secondSection = new ArrayList();
-              
-              boolean first = true;
 
-                  for(Point point : line.getPoints()){
-                      if(first){
-                          firstSection.add(point); 
-                      }else{
-                          secondSection.add(point);
-                      }
-                      if(point == splitPoint){
-                          first = false;
-                          
-                      }
-                  }
-                  
-                  Line secondLine = new Line(secondSection);
-                  Line firstLine = new Line(firstSection);
-                  ArrayList<Line> lineList = new ArrayList();
-                  if(line.getPoints().get(0) == firstConnectedPoint.getCurrentPoint()){
-                      firstConnectedPoint.addConnectedLine(firstLine);
-                      secondConnectedPoint.addConnectedLine(secondLine);
-                  } else if (line.getPoints().get(0) == secondConnectedPoint.getCurrentPoint()) {
-                      secondConnectedPoint.addConnectedLine(secondLine);
-                      firstConnectedPoint.addConnectedLine(firstLine);
-                  }
-                  ConnectedPoint splitConnectionPoint = new ConnectedPoint(lineList, splitPoint);
-                  connectedPoints.add(splitConnectionPoint);
-                  }
-             
-              
-              
-          } else if (connectedPoints.size() == 1) {
-              
-          }
+
+
+
+      public void split(Line line,ConnectedLines connectedLines, Point splitPoint){
+
+
+        ArrayList<Point> section = new ArrayList<>();
+        ArrayList<Line> splitLines = new ArrayList<>();
+
+        ConnectedPoint splitConnectedPoint = null;
+
+          Point lastPoint = line.getPoints().get(line.getPoints().size() - 1);
+          System.out.println("connected Points size" + connectedLines.getLines().size());
+        Point previousPoint = null;
+        Line sectionLine = null;
+
+        if(!line.getPoints().contains(splitPoint)){
+            System.out.println("Special case: splitPoint is not on line");
+        }else{
+
+        for(Point point : line.getPoints()){
+
+            if(checkForPoint(connectedLines,point) && previousPoint != splitPoint){
+
+                System.out.println("cheking point");
+                      previousPoint = point;
+                      section.clear();
+
+
+            }else if(point.equals(splitPoint) && previousPoint == null){
+
+
+                previousPoint = splitPoint;
+                section.clear();
+            }
+            else if(point.equals(splitPoint) && previousPoint != null){
+                for(ConnectedPoint connectedPoint : connectedLines.getPoints()){
+                    if(connectedPoint.getCurrentPoint().equals(previousPoint)){
+                        System.out.println("previous Point");
+
+                        removeLineWithPoint(connectedPoint, point);
+                        sectionLine = new Line(section);
+                        connectedPoint.addConnectedLine(sectionLine);
+                        for(Point p : sectionLine.getPoints()){
+                            setPixel(p, Color.GRAY.getRGB());
+                        }
+
+                        splitLines.add(sectionLine);
+                        splitConnectedPoint = new ConnectedPoint(splitLines, splitPoint);
+                        connectedLines.addConnectedPoint(splitConnectedPoint);
+
+                    }
+                }
+                previousPoint = splitPoint;
+                section.clear();
+
+            }else if(checkForPoint(connectedLines,point) && previousPoint == splitPoint){
+                System.out.println("previous Point is split Point");
+                for(ConnectedPoint connectedPoint : connectedLines.getPoints()){
+                    if(connectedPoint.getCurrentPoint().equals(point)){
+                        removeLineWithPoint(connectedPoint, splitPoint);
+                        sectionLine = new Line(section);
+                        if(splitConnectedPoint == null){
+                            splitLines.add(sectionLine);
+                            splitConnectedPoint = new ConnectedPoint(splitLines, splitPoint);
+                        }else{
+                            splitConnectedPoint.addConnectedLine(sectionLine);
+                        }
+
+                        connectedLines.addConnectedPoint(splitConnectedPoint);
+                        connectedPoint.addConnectedLine(sectionLine);
+                        for(Point p : sectionLine.getPoints()){
+                            setPixel(p, Color.GRAY.getRGB());
+                        }
+
+                    }
+                    previousPoint = null;
+                    break;
+
+                }
+            }else if(point.equals(lastPoint) && previousPoint == null){
+
+
+            }
+
+            else{
+                section.add(point);
+            }
+        }
+        if(splitConnectedPoint != null){
+            connectedLines.addConnectedPoint(splitConnectedPoint);
+
+        }
 
       }
+
+      }
+
+
 
        public void checkForConnectionSection(Line drawnLine){
 
@@ -224,13 +279,10 @@ public class RasterPanelUtility {
 
                if (crossLinesCheck(drawnLine, checkedLine)) {
 
-
                    Point inter = findIntersection(drawnLine.getPoints().get(0),drawnLine.getPoints().get(drawnLine.getPoints().size() - 1),
                            checkedLine.getPoints().get(0), checkedLine.getPoints().get(checkedLine.getPoints().size() - 1));
 
-
                    setPixel(inter, Color.YELLOW.getRGB());
-
 
                    boolean addNewConnectedLine = true;
 
@@ -243,7 +295,7 @@ public class RasterPanelUtility {
                            ConnectedPoint connectionPoint = new ConnectedPoint(connectedLines, findIntersection(drawnLine.getPoints().get(0),drawnLine.getPoints().get(drawnLine.getPoints().size() - 1),
                                    checkedLine.getPoints().get(0), checkedLine.getPoints().get(checkedLine.getPoints().size() - 1)));
                            currentConnectedPoints.add(connectionPoint);
-
+                           connectedPointsList.add(connectionPoint);
                            prev = new ConnectedLines(connectedLines, currentConnectedPoints);
 
                        }else{
@@ -251,6 +303,7 @@ public class RasterPanelUtility {
                        }
 
                    }else{
+
                        ConnectedLines merge = null;
                        for(ConnectedLines connectedLine : connectedLinesList){
                            if(connectedLine.containsLine(checkedLine) && connectedLine.containsLine(drawnLine)){
@@ -262,7 +315,7 @@ public class RasterPanelUtility {
 
                                if(prev == null){
 
-
+                                   split(checkedLine,connectedLine,inter);
                                    connectedLine.addLine(drawnLine);
                                    prev = connectedLine;
 
@@ -273,17 +326,18 @@ public class RasterPanelUtility {
                                    System.out.println("checked line");
 
                                }
-
-
-
                            }
-
                        }
+
+
+
                        if(merge!=null){
                            connectedLinesList.remove(prev);
                            connectConnectedLines(merge, prev);
                            connectedLinesList.remove(merge);
                            connectedLinesList.add(prev);
+                           split(drawnLine,prev,inter);
+                           System.out.println("2 connected lines merged");
                        }
 
                        if(addNewConnectedLine){
@@ -291,24 +345,18 @@ public class RasterPanelUtility {
                            connectedLines.add(drawnLine);
                            connectedLines.add(checkedLine);
                            ArrayList<ConnectedPoint> currentConnectedPoints = new ArrayList<>();
-                           ConnectedPoint connectionPoint = new ConnectedPoint(connectedLines, findIntersection(drawnLine.getPoints().get(0),drawnLine.getPoints().get(drawnLine.getPoints().size() - 1),
-                                   checkedLine.getPoints().get(0), checkedLine.getPoints().get(checkedLine.getPoints().size() - 1)));
+
+
+                           ConnectedPoint connectionPoint = new ConnectedPoint(connectedLines, inter);
                            currentConnectedPoints.add(connectionPoint);
 
                            prev = new ConnectedLines(connectedLines, currentConnectedPoints);
                            connectedLinesList.add(prev);
                            System.out.println("new connected line different");
+
                        }
-
-
                    }
-
-
-
                    System.out.println("Intersection detected!");
-
-
-
                }
            }
 
@@ -318,8 +366,6 @@ public class RasterPanelUtility {
                connectedLinesList.add(prev);
                System.out.println("new connected line added  " + connectedLinesList.size());
            }
-
-
 
            updateDevInfoPanel();
 
@@ -344,6 +390,73 @@ public class RasterPanelUtility {
           mousePosition = new Point(x, y);
 
         }
+    public int getPixelColor(int x, int y) {
+
+        if (x < 0 || x >= width || y < 0 || y >= height) {
+            return -1;
+        }
+        return gridSize[y][x];
+    }
+
+    public void setPixelColor(int x, int y, int color) {
+
+        if (x < 0 || x >= width || y < 0 || y >= height) {
+            return;
+        }
+        gridSize[y][x] = color;
+        repaintPixel(x, y, color);
+    }
+    public void repaintPixel(int x, int y, int newColor) {
+
+        gridSize[x][y] = newColor;
+
+
+        rasterPanel.repaint();
+    }
+
+
+
+
+    public void seedFill(Point p, Polygon polygon, int targetColor, int fillColor) {
+
+        if (pointOrientationHandler.isPointInsidePolygon(p, polygon.getPoints())) {
+            System.out.println("polygon inside");
+
+
+
+
+            int currentColor = getPixelColor(p.getX(), p.getY());
+
+
+            if (polygon.getPoints().contains(p)) {
+                return;
+            }
+
+
+            setPixel(p, fillColor);
+
+
+            seedFill(new Point(p.getX() + 1, p.getY()), polygon, targetColor, fillColor);
+            seedFill(new Point(p.getX() - 1, p.getY()), polygon, targetColor, fillColor);
+            seedFill(new Point(p.getX(), p.getY() + 1), polygon, targetColor, fillColor);
+            seedFill(new Point(p.getX(), p.getY() - 1), polygon, targetColor, fillColor);
+        }
+    }
+
+
+
+
+
+    private boolean isValidPoint(Point p) {
+        return p.getX() >= 0 && p.getX() < width && p.getY() >= 0 && p.getY() < height;
+    }
+
+    private void addPointIfValid(Stack<Point> stack, Point p, int targetColor, int fillColor) {
+        if (isValidPoint(p) && gridSize[p.getX()][p.getY()] == targetColor) {
+            stack.push(p);
+        }
+    }
+
 
     public void setPixel(Point point, int color) {
         if (point.getX() >= 0 && point.getX() < width && point.getY() >= 0 && point.getY() < height) {
@@ -365,7 +478,7 @@ public class RasterPanelUtility {
 
         if(shiftPressed){
             Line line = shiftLine(startPoint, endPoint);
-            drawLine(line, Color.blue.getRGB());
+            drawLine(line, Color.RED.getRGB());
             createdLines.add(line);
 
         }else{
@@ -395,7 +508,6 @@ public class RasterPanelUtility {
               for(Point p1 : temporaryLine.getPoints()) {
 
                   if(line.getPoints().contains(p1)){
-                      System.out.println("contains");
                       tempCrossedPoints.add(p1);
 
                   }else{
@@ -440,6 +552,16 @@ public class RasterPanelUtility {
 
         for(int i = 0; i < vertices - 1; i++){
             createLine(polygon.getPoints().get(i), polygon.getPoints().get(i + 1));
+        }
+    }
+
+    public void seedFill() {
+        Point p = new Point(mousePosition.getX(), mousePosition.getY());
+
+
+        if (pointOrientationHandler.isPointInsidePolygon(p, polygon.getPoints()) && polygon != null) {
+            System.out.println("Point is inside");
+            seedFill(p,polygon, Color.RED.getRGB(), Color.BLUE.getRGB());
         }
     }
 
@@ -498,24 +620,91 @@ public class RasterPanelUtility {
             polygonUtility.setSides(polygonUtility.getSides()-1);
             statPanel.updatePolygonSideCount(polygonUtility.getSides());
         }else if (a == 'K') {
-            if(devInfoPanel.isVisible()){
+            if (devInfoPanel.isVisible()) {
                 devInfoPanel.setVisible(false);
-            }else{
+            } else {
                 devInfoPanel.setVisible(true);
                 updateDevInfoPanel();
             }
-        }else if(a =='F'){
+        }
+        else if(a =='A'){
+             seedFill();
+            }
+        else if(a =='F'){
             radius = polygonUtility.getRadius();
             sides = polygonUtility.getSides();
             polygon = new Polygon(polygonUtility.calculatePolygonVertices(mousePosition.getX(),mousePosition.getY(),radius,sides));
             drawPolygon(polygon, sides);
+        }else if(a =='P'){
+            paintConnectedLines();
+        }else if(a =='1'){
+            paintConnectedLines();
         }
     }
+
+
+    public ArrayList<Line> getSharedLines() {
+        Map<Line, Integer> lineOccurrences = new HashMap<>();
+        ArrayList<Line> sharedLines = new ArrayList<>();
+
+        for (ConnectedLines connectedLines : connectedLinesList) {
+            for (ConnectedPoint connectedPoint : connectedLines.getPoints()) {
+                for (Line line : connectedPoint.getConnectedLines()) {
+                    lineOccurrences.put(line, lineOccurrences.getOrDefault(line, 0) + 1);
+                }
+            }
+        }
+
+
+        for (Map.Entry<Line, Integer> entry : lineOccurrences.entrySet()) {
+            if (entry.getValue() >= 2) {
+                sharedLines.add(entry.getKey());
+            }
+        }
+
+        return sharedLines;
+    }
+
+    public void paintConnectedLines(){
+
+        ArrayList<Line> sharedLines = getSharedLines();
+
+        System.out.println(sharedLines.size());
+        for(Line line : sharedLines){
+            drawLine(line, Color.YELLOW.getRGB());
+        }
+        ArrayList<Line> lines = new ArrayList<>();
+        for(ConnectedLines connectedLines : connectedLinesList){
+            for(ConnectedPoint connectedPoint : connectedLines.getPoints()){
+                for(Line line : connectedPoint.getConnectedLines()){
+                    lines.add(line);
+                }
+            }
+        }
+        for(Line line : lines){
+            for(int i = 0; i < line.getPoints().size(); i++){
+
+            }
+        }
+
+
+    }
+
+
+
 
     public void updateDevInfoPanel(){
 
         if(devInfoPanel.isVisible()){
-            devInfoPanel.updateDevInfoPanel(connectedPointsList.size(),connectedLinesList.size(), connectedLinesList.size(), polygonsList.size());
+
+            int connectedPoints = 0;
+            int connectedLines = 0;
+            for(ConnectedLines connectedLines1 : connectedLinesList){
+                connectedPoints += connectedLines1.getPoints().size();
+                connectedLines += connectedLines1.getLines().size();
+            }
+
+            devInfoPanel.updateDevInfoPanel(connectedPoints,connectedLines, connectedLinesList.size(), polygonsList.size());
             devInfoPanel.repaint();
         }
 
@@ -525,6 +714,8 @@ public class RasterPanelUtility {
         tempPoints.clear();
         tempEndPoints.clear();
         createdLines.clear();
+        connectedLinesList.clear();
+        connectedPointsList.clear();
         mousePosition = null;
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -563,6 +754,10 @@ public class RasterPanelUtility {
     public void setLineUtility(LineUtility lineUtility) {
         this.lineUtility = lineUtility;
     }
+    public void setPointOrientationHandler(PointOrientationHandler pointOrientationHandler){
+        this.pointOrientationHandler = pointOrientationHandler;
+    }
+
 
     }
 
